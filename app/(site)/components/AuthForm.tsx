@@ -5,10 +5,11 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { BsGithub, BsGoogle } from 'react-icons/bs';
+import { BsGithub } from 'react-icons/bs';
 
 import Button from '@/app/components/Button';
 import Input from '@/app/components/inputs/Input';
+import LoadingModal from '@/app/components/modals/LoadingModal';
 import { toast } from 'react-hot-toast';
 import AuthSocialButton from './AuthSocialButton';
 
@@ -60,14 +61,15 @@ const AuthForm = () => {
         )
         .then(callback => {
           if (callback?.error) {
-            toast.error('Invalid credentials!');
+            toast.error('注册失败');
           }
 
           if (callback?.ok) {
+            toast.error('注册成功!');
             router.push('/conversations');
           }
         })
-        .catch(() => toast.error('Something went wrong!'))
+        .catch(() => toast.error('发生了一些错误'))
         .finally(() => setIsLoading(false));
     }
 
@@ -78,10 +80,11 @@ const AuthForm = () => {
       })
         .then(callback => {
           if (callback?.error) {
-            toast.error('Invalid credentials!');
+            toast.error('身份验证失败');
           }
 
           if (callback?.ok) {
+            toast.success('欢迎回来!');
             router.push('/conversations');
           }
         })
@@ -95,7 +98,7 @@ const AuthForm = () => {
     signIn(action, { redirect: false })
       .then(callback => {
         if (callback?.error) {
-          toast.error('Invalid credentials!');
+          toast.error('身份验证失败');
         }
 
         if (callback?.ok) {
@@ -106,9 +109,11 @@ const AuthForm = () => {
   };
 
   return (
-    <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
-      <div
-        className='
+    <>
+      {isLoading && <LoadingModal />}
+      <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
+        <div
+          className='
         bg-white
           px-4
           py-8
@@ -116,73 +121,66 @@ const AuthForm = () => {
           sm:rounded-lg
           sm:px-10
         '>
-        <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
-          {variant === 'REGISTER' && (
+          <form className='space-y-6' onSubmit={handleSubmit(onSubmit)}>
+            {variant === 'REGISTER' && (
+              <Input
+                disabled={isLoading}
+                register={register}
+                errors={errors}
+                required
+                id='name'
+                label='用户名'
+              />
+            )}
             <Input
               disabled={isLoading}
               register={register}
               errors={errors}
               required
-              id='name'
-              label='用户名'
+              id='email'
+              label='邮箱'
+              type='email'
             />
-          )}
-          <Input
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-            required
-            id='email'
-            label='邮箱'
-            type='email'
-          />
-          <Input
-            disabled={isLoading}
-            register={register}
-            errors={errors}
-            required
-            id='password'
-            label='密码'
-            type='password'
-          />
-          <div>
-            <Button disabled={isLoading} fullWidth type='submit'>
-              {variant === 'LOGIN' ? 'Sign in' : 'Register'}
-            </Button>
-          </div>
-        </form>
+            <Input
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+              required
+              id='password'
+              label='密码'
+              type='password'
+            />
+            <div>
+              <Button disabled={isLoading} fullWidth type='submit'>
+                {variant === 'LOGIN' ? '登录' : '注册'}
+              </Button>
+            </div>
+          </form>
 
-        <div className='mt-6'>
-          <div className='relative'>
-            <div
-              className='
+          <div className='mt-6'>
+            <div className='relative mb-2'>
+              <div
+                className='
                 absolute 
                 inset-0 
                 flex 
                 items-center
               '>
-              <div className='w-full border-t border-gray-300' />
+                <div className='w-full border-t border-gray-300' />
+              </div>
+              <div className='relative flex justify-center text-sm'>
+                <span className='bg-white px-2 text-gray-500'>
+                  其他方式登录
+                </span>
+              </div>
             </div>
-            <div className='relative flex justify-center text-sm'>
-              <span className='bg-white px-2 text-gray-500'>
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <div className='mt-6 flex gap-2'>
             <AuthSocialButton
               icon={BsGithub}
               onClick={() => socialAction('github')}
             />
-            <AuthSocialButton
-              icon={BsGoogle}
-              onClick={() => socialAction('google')}
-            />
           </div>
-        </div>
-        <div
-          className='
+          <div
+            className='
             flex 
             gap-2 
             justify-center 
@@ -191,17 +189,14 @@ const AuthForm = () => {
             px-2 
             text-gray-500
           '>
-          <div>
-            {variant === 'LOGIN'
-              ? 'New to Messenger?'
-              : 'Already have an account?'}
-          </div>
-          <div onClick={toggleVariant} className='underline cursor-pointer'>
-            {variant === 'LOGIN' ? 'Create an account' : 'Login'}
+            <div>{variant === 'LOGIN' ? '没有帐号?' : '已有帐号?'}</div>
+            <div onClick={toggleVariant} className='underline cursor-pointer'>
+              {variant === 'LOGIN' ? '立即注册' : '登录'}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

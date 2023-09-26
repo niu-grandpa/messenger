@@ -1,20 +1,17 @@
 'use client';
 
+import { User } from '@prisma/client';
 
-import { User } from "@prisma/client";
-
-import UserBox from "./UserBox";
+import UserBox from './UserBox';
 
 interface UserListProps {
   items: User[];
 }
 
-const UserList: React.FC<UserListProps> = ({ 
-  items, 
-}) => {
-  return ( 
-    <aside 
-      className="
+const UserList: React.FC<UserListProps> = ({ items }) => {
+  return (
+    <aside
+      className='
         fixed 
         inset-y-0 
         pb-20
@@ -26,30 +23,25 @@ const UserList: React.FC<UserListProps> = ({
         border-r 
         border-gray-200
         block w-full left-0
-      "
-    >
-      <div className="px-5">
-        <div className="flex-col">
-          <div 
-            className="
+      '>
+      <div className='px-5'>
+        <div className='flex-col'>
+          <div
+            className='
               text-2xl 
               font-bold 
               text-neutral-800 
               py-4
-            "
-          >
-            People
+            '>
+            好友
           </div>
         </div>
-        {items.map((item) => (
-          <UserBox
-            key={item.id}
-            data={item}
-          />
+        {items.map(item => (
+          <UserBox key={item.id} data={item} />
         ))}
       </div>
     </aside>
   );
-}
- 
+};
+
 export default UserList;

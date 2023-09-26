@@ -1,27 +1,30 @@
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
-import prisma from "@/app/libs/prismadb";
-import { NextResponse } from "next/server";
+import prisma from '@/app/libs/prismadb';
+import { NextResponse } from 'next/server';
 
-export async function POST(
-  request: Request
-) {
-  const body = await request.json();
-  const {
-    email,
-    name,
-    password
-  } = body;
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { email, name, password } = body;
 
-  const hashedPassword = await bcrypt.hash(password, 12);
-
-  const user = await prisma.user.create({
-    data: {
-      email,
-      name,
-      hashedPassword
+    if (!email || !name || !password) {
+      return new NextResponse('缺少登录信息', { status: 400 });
     }
-  });
 
-  return NextResponse.json(user);
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name,
+        hashedPassword,
+      },
+    });
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.log(error, '注册失败');
+    return new NextResponse('服务器错误', { status: 500 });
+  }
 }

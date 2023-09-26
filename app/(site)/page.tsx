@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import AuthForm from './components/AuthForm';
 
 const Auth = () => {
@@ -15,13 +14,13 @@ const Auth = () => {
         bg-gray-100
       '>
       <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-        <Image
+        {/* <Image
           height='48'
           width='48'
           className='mx-auto w-auto'
           src='/images/logo.png'
           alt='Logo'
-        />
+        /> */}
         <h2
           className='
             mt-6 
@@ -31,7 +30,7 @@ const Auth = () => {
             tracking-tight 
             text-gray-900
           '>
-          请登录您的账户
+          登录您的账户
         </h2>
       </div>
       <AuthForm />
