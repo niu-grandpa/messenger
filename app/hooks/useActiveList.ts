@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
 
 interface ActiveListStore {
   members: string[];
@@ -7,11 +7,15 @@ interface ActiveListStore {
   set: (ids: string[]) => void;
 }
 
-const useActiveList = create<ActiveListStore>((set) => ({
+// 管理活跃用户列表
+const useActiveList = create<ActiveListStore>(set => ({
   members: [],
-  add: (id) => set((state) => ({ members: [...state.members, id] })),
-  remove: (id) => set((state) => ({ members: state.members.filter((memberId) => memberId !== id) })),
-  set: (ids) => set({ members: ids })
+  add: id => set(state => ({ members: [...state.members, id] })),
+  remove: id =>
+    set(state => ({
+      members: state.members.filter(memberId => memberId !== id),
+    })),
+  set: ids => set({ members: ids }),
 }));
 
 export default useActiveList;

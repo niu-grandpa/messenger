@@ -9,8 +9,6 @@ import { HiEllipsisHorizontal } from 'react-icons/hi2';
 import useActiveList from '@/app/hooks/useActiveList';
 import useOtherUser from '@/app/hooks/useOtherUser';
 
-import Avatar from '@/app/components/Avatar';
-import AvatarGroup from '@/app/components/AvatarGroup';
 import ProfileDrawer from './ProfileDrawer';
 
 interface HeaderProps {
@@ -27,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const isActive = members.indexOf(otherUser?.email!) !== -1;
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
-      return `${conversation.users.length} 群员`;
+      return `${conversation.users.length}位用户`;
     }
 
     return isActive ? '在线' : '离线';
@@ -67,13 +65,15 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           '>
             <HiChevronLeft size={32} />
           </Link>
-          {conversation.isGroup ? (
+          {/* {conversation.isGroup ? (
             <AvatarGroup users={conversation.users} />
           ) : (
             <Avatar user={otherUser} />
-          )}
+          )} */}
           <div className='flex flex-col'>
-            <div>{conversation.name || otherUser.name}</div>
+            <div className='text-[16px]'>
+              {conversation.name || otherUser.name}
+            </div>
             <div className='text-sm font-light text-neutral-500'>
               {statusText}
             </div>

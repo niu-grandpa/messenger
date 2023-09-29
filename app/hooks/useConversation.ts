@@ -1,6 +1,7 @@
-import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 
+// 当点开聊天路由时，获取当前对话id
 const useConversation = () => {
   const params = useParams();
 
@@ -14,10 +15,13 @@ const useConversation = () => {
 
   const isOpen = useMemo(() => !!conversationId, [conversationId]);
 
-  return useMemo(() => ({
-    isOpen,
-    conversationId
-  }), [isOpen, conversationId]);
+  return useMemo(
+    () => ({
+      isOpen,
+      conversationId,
+    }),
+    [isOpen, conversationId]
+  );
 };
 
 export default useConversation;
